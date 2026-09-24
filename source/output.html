@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Concacaf formation widget</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background: transparent;
+            }
+            svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+            .player-card {
+                transition: transform 750ms cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            .card-badge {
+                clip-path: inset(100% 0 0 0);
+            }
+            .card-name {
+                clip-path: inset(0 100% 0 0);
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .player-card {
+                    transition: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <svg
+            id="graphic"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 894 840"
+            role="img"
+            aria-label="Player formation"
+        ></svg>
+        <script src="https://app.singular.live/libs/singularwidget/1.0.4/singularwidget.js"></script>
+        <script>
+            const SHIRT =
+                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHUAAABiCAYAAABu15yfAAAACXBIWXMAAAsSAAALEgHS3X78AAAE1ElEQVR4nO2dUWvbOhSAvy6XXFYWCAR6aWFQ2NjDhcH9/39jbxcGg146OlYoZDSsUHIfpINVV7EtW3Lsk/NB6LI6k+bPRzqSJedsv98zM1b+9Q74BjwVKuMS+AVs/Ws2nE1c6gJ3gs9xEle132+BfwuU+zfwNlLWLCRPTapIlFf9xIKLzC2w8e9vgB8Z6/AeuACegQdfj2XkuFDyoz9+EhxbaheJO6ro2FKdvAucAHDN8H2G+myAa//nrzip4KSG9YxJPlTP0RlbanhyzkmTGOOafBErEYr/d24ajl3i6t/nYizOGFKXwBXNzVh4AlL/89dUYrfAd9L6vBVOqIhpExojpcW5pbDg0lIvcEIXwd+VSDjq5eyAn1Qnso6c/A3VhfaMa8YfIsen0iQ5ZzlRSkld4CJo7d/3iaBUpEXYtB1Y4xkXnXeUiyCRfEUl+B7XImQvs4TUNU6oRE3u7LSNha/DGtfvxZp8yaC3uIgZM6kJ++4nXNRmvdhzSl3grkSp8A5X4cdcBShihbvw5YL7jutrs5BLar2SfZKNU2OBi1rpLrIFQQ6pV7gpNSjUnCgn7K6ecRE7qLsaIvXcV0Y6/gec0MnMrMyIBfCBahp0y4B57b5SwyFE8RT9hMhyXlOlZr2ijCiDW8AUqcceqpwavXOVLlKLZWlGK71GFW1SbahyfJLH/01SbagyLTp3fzGp9Y662BylkUxsTv0btUS1LtWGKvOg7umGYJGASI0NVb5i0TlllsBHIkMfkfoPGaepjFGp5z5f3vg3Erpyb9GYD+F94DsAkSpLLORGszEf3uNa2R0+IEWqdLbgOuHYjWVjesiSHAjmD94EB9zjEiSZQTKmj3gSd8BLqQD/+Z9rXq+GN6bFBS7zDVtZ4LXUR6pE6bp4tYy+yNQhRJac1qWGB1nSNF1eJUchMamWNE2baHIUEpMKljRNmWhyFHJIKljSNEUOJkchTVItaZoWjclRSJPU8MOWNB2fxuQopE2q3H4DS5qOSWtyFNImFdwtHUuajktrchTSRSpU0To0adqQvitt7sje3L50So5Cukp9wm3igX5J0wb47D/7Z4/Pz5l3wCf/SpXbOTkK+SOhgDuqTbpXdNultfHHWl9cbUBO2avbOTkK6Rqp8DL8L2kWFUbm0n92l1CWRmSt14pukZuUHIWkRKpUbEu1Hrj+DCN5qJRUNtyl/RfxZyGcCrJmWna7t0VuUnIUkioVXNL02VdoTfWsoUMybfFahayfvqVZbnJyFNJHqiRNl1Rb3bvI/O1/nnK0Cm1yz/1xvZ7k0kcqvEyapM9si0xZcLw48PtT5JBcSEyOQvpKlWbhgy+4+LOBlBOT23vPUl+p4PrSL9je1JyI3EHbXFKGNIcqYeRnUKs3VKoxQUyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkyqQkxqeWST9Wg7GExqeWQf72jf42NSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFWJSFTKmVFlNZ9/wWJghD3FOJVz3+mnEck+OMaWGWLQW5Gy/349Z3inLTPpumSH8D83SisTY9EeVAAAAAElFTkSuQmCC';
+            const INITIAL = {
+                formation: '4-2-3-1',
+                gap: 42,
+                opacity: 100,
+                players: [
+                    { number: '24', name: 'FREESE' },
+                    { number: '5', name: 'ROBINSON' },
+                    { number: '13', name: 'REAM' },
+                    { number: '3', name: 'RICHARDS' },
+                    { number: '16', name: 'FREEMAN' },
+                    { number: '4', name: 'ADAMS' },
+                    { number: '7', name: 'TILLMAN' },
+                    { number: '10', name: 'PULISIC' },
+                    { number: '8', name: 'MCKENNIE' },
+                    { number: '2', name: 'DEST' },
+                    { number: '20', name: 'BALOGUN' },
+                ],
+            };
+            let state = structuredClone(INITIAL);
+            const ROW_STAGGER = 140,
+                BADGE_MS = 260,
+                NAME_OFFSET = 150,
+                NAME_MS = 240,
+                START_DELAY = 1000;
+            let cardEls = [];
+            let entered = false;
+            function contentSignature() {
+                return state.formation + '|' + state.players.map((p) => p.number + ':' + p.name).join(',');
+            }
+            const $ = (id) => document.getElementById(id),
+                NS = 'http://www.w3.org/2000/svg';
+            function node(tag, attrs = {}, text) {
+                const n = document.createElementNS(NS, tag);
+                for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+                if (text !== undefined) n.textContent = text;
+                return n;
+            }
+            function counts() {
+                return [1, ...state.formation.split('-').map(Number)];
+            }
+            function add(parent, tag, attrs, text) {
+                const n = node(tag, attrs, text);
+                parent.append(n);
+                return n;
+            }
+            function fitText(n, text, max, fontSize) {
+                n.textContent = text;
+                n.setAttribute('font-size', fontSize);
+                const width = n.getComputedTextLength();
+                if (width > max) n.setAttribute('font-size', (fontSize * max) / width);
+            }
+            function render() {
+                const svg = $('graphic');
+                const font = {
+                    'font-family': 'Arial Narrow,Arial,sans-serif',
+                    'font-weight': 'bold',
+                };
+                let index = 0;
+                const newCardEls = [];
+                const rows = counts();
+                const canvasWidth = 894,
+                    canvasHeight = 840,
+                    maxSpan = canvasWidth - 40;
+                // Bakes in the 76.92% scale + position offset previously applied manually in Composer:
+                // padding the viewBox around unchanged content shrinks it the same way scaling the box down would,
+                // and panning that padded window shifts content the same way moving the box would.
+                // Position assumes standard screen convention (negative X = left, positive Y = down) — flip the
+                // sign of EXTERNAL_POS_X/Y below if it renders shifted the wrong way.
+                // X includes an extra -1% correction (confirmed too far right at -0.0227 alone).
+                const EXTERNAL_SCALE = 0.7692,
+                    EXTERNAL_POS_X = -0.039,
+                    EXTERNAL_POS_Y = 0.0753;
+                const vbW = canvasWidth / EXTERNAL_SCALE,
+                    vbH = canvasHeight / EXTERNAL_SCALE;
+                const vbX = -(vbW - canvasWidth) / 2 - EXTERNAL_POS_X * vbW,
+                    vbY = -(vbH - canvasHeight) / 2 - EXTERNAL_POS_Y * vbH;
+                svg.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
+                const maxGap = (count) =>
+                    count > 1 ? Math.max(0, (maxSpan - count * 160) / (count - 1)) : Infinity;
+                const refCount = Math.max(...rows);
+                const refGap = Math.min(state.gap, maxGap(refCount));
+                const refSpan = refCount * 160 + (refCount - 1) * refGap;
+                rows.forEach((count, r) => {
+                    const isRef = state.formation === '4-2-3-1';
+                    let y = 662 - r * (560 / (rows.length - 1));
+                    if (isRef) y = [662, 526, 381, 241, 102][r];
+                    let gap;
+                    if (count <= 1) gap = state.gap;
+                    else if (count >= refCount) gap = refGap;
+                    else {
+                        const rawGap = Math.min(state.gap, maxGap(count));
+                        const stretchedGap = (refSpan - count * 160) / (count - 1);
+                        const f = count / refCount;
+                        const factor = Math.max(0, Math.min(1, -1.456 * f * f + 3.972 * f - 1.516));
+                        gap = Math.max(
+                            0,
+                            Math.min(maxGap(count), rawGap + factor * (stretchedGap - rawGap)),
+                        );
+                    }
+                    const span = count * 160 + (count - 1) * gap;
+                    for (let col = 0; col < count; col++) {
+                        const p = state.players[index++];
+                        let x = 447 - span / 2 + col * (160 + gap),
+                            dy = 0;
+                        // A shallow symmetric arc: the central player/pair stays on the baseline.
+                        // For even rows, both central players share the same height.
+                        if (count >= 3) {
+                            const distance = Math.abs(col - (count - 1) / 2),
+                                inner = count % 2 === 0 ? 0.5 : 0,
+                                outer = (count - 1) / 2;
+                            dy =
+                                (-20 * (distance * distance - inner * inner)) /
+                                (outer * outer - inner * inner);
+                        }
+
+                        let g = svg.querySelector(`[data-player="${index - 1}"]`);
+                        if (!g)
+                            g = add(svg, 'g', { 'data-player': index - 1, class: 'player-card' });
+                        g.style.transform = `translate(${x}px, ${y + dy}px)`;
+                        let badge = g.querySelector('.card-badge'),
+                            nameGrp = g.querySelector('.card-name');
+                        if (!badge) {
+                            badge = add(g, 'g', { class: 'card-badge' });
+                            nameGrp = add(g, 'g', { class: 'card-name' });
+                        }
+                        newCardEls.push({
+                            badge,
+                            nameGrp,
+                            rowDelay: (rows.length - 1 - r) * ROW_STAGGER,
+                        });
+                        badge.replaceChildren();
+                        add(badge, 'rect', {
+                            width: 160,
+                            height: 100,
+                            fill: '#0d3260',
+                            stroke: '#c6cde2',
+                            'stroke-width': 1,
+                        });
+                        add(badge, 'image', {
+                            href: SHIRT,
+                            x: 18,
+                            y: 5,
+                            width: 117,
+                            height: 98,
+                            opacity: state.opacity / 100,
+                        });
+                        const number = add(badge, 'text', {
+                            x: 80,
+                            y: 59,
+                            fill: '#fff',
+                            'text-anchor': 'middle',
+                            ...font,
+                            'font-family': 'Arial Black,Arial,sans-serif',
+                            'font-size': 42,
+                        });
+                        fitText(number, p.number, 140, 42);
+                        nameGrp.replaceChildren();
+                        add(nameGrp, 'rect', { y: 78, width: 160, height: 22, fill: 'white' });
+                        const name = add(nameGrp, 'text', {
+                            x: 80,
+                            y: 96,
+                            fill: '#00052f',
+                            'text-anchor': 'middle',
+                            ...font,
+                            'font-family': 'Arial,sans-serif',
+                            'font-size': 20,
+                        });
+                        fitText(name, p.name.toUpperCase(), 150, 20);
+                    }
+                });
+                cardEls = newCardEls;
+            }
+
+            function setClip(el, open, closedValue) {
+                el.getAnimations().forEach((a) => a.cancel());
+                el.style.clipPath = open ? 'inset(0 0 0 0)' : closedValue;
+            }
+            function snapEntrance(shown) {
+                cardEls.forEach(({ badge, nameGrp }) => {
+                    setClip(badge, shown, 'inset(100% 0 0 0)');
+                    setClip(nameGrp, shown, 'inset(0 100% 0 0)');
+                });
+            }
+            function playEntrance(scale) {
+                if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    snapEntrance(true);
+                    return;
+                }
+                cardEls.forEach(({ badge, nameGrp, rowDelay }) => {
+                    badge.getAnimations().forEach((a) => a.cancel());
+                    nameGrp.getAnimations().forEach((a) => a.cancel());
+                    badge.animate(
+                        [{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }],
+                        {
+                            duration: BADGE_MS * scale,
+                            delay: START_DELAY + rowDelay * scale,
+                            easing: 'ease-out',
+                            fill: 'forwards',
+                        },
+                    );
+                    nameGrp.animate(
+                        [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }],
+                        {
+                            duration: NAME_MS * scale,
+                            delay: START_DELAY + (rowDelay + NAME_OFFSET) * scale,
+                            easing: 'ease-out',
+                            fill: 'forwards',
+                        },
+                    );
+                });
+            }
+            // Set to true to log every animation callback to the console (to diagnose Out handling).
+            const DEBUG_ANIMATION = false;
+            // The destination state decides direction. `state` can still be the state being LEFT on a
+            // 'start' event, so it is only a last resort -- reading it as the target made an Out look
+            // like an entrance, which replayed the reveal after Out finished.
+            function isEntering(anim) {
+                const target = anim.newState || anim.targetState;
+                if (target) return target === 'In';
+                if (anim.direction === 'reverse') return false;
+                return (anim.state || anim.timeline) === 'In';
+            }
+            function onSingularAnimation(anim) {
+                if (!anim || typeof anim !== 'object') return;
+                if (DEBUG_ANIMATION) console.log('onAnimation', JSON.stringify(anim));
+                const entering = isEntering(anim);
+                if (anim.event === 'init' || anim.event === 'jump') {
+                    entered = entering;
+                    snapEntrance(entering);
+                    return;
+                }
+                if (anim.event === 'stop' && !entering) {
+                    // Out has finished: make sure nothing is left on screen or pending.
+                    entered = false;
+                    snapEntrance(false);
+                    return;
+                }
+                if (anim.event === 'start') {
+                    entered = entering;
+                    if (!entering) {
+                        snapEntrance(false);
+                        return;
+                    }
+                    const maxRowDelay = cardEls.reduce((m, c) => Math.max(m, c.rowDelay), 0);
+                    const designTotal = maxRowDelay + NAME_OFFSET + NAME_MS;
+                    const scale = anim.duration ? (anim.duration * 1000) / designTotal : 1;
+                    playEntrance(scale);
+                }
+                // 'stop' and 'seek': Singular's SDK docs don't document a scrub position for these,
+                // so we leave the current state as-is rather than guess at an undocumented field.
+            }
+
+            function onSingularValue(values) {
+                if (!values || typeof values !== 'object' || Array.isArray(values)) return;
+                const before = entered ? contentSignature() : null;
+                if (typeof values.formation === 'string') {
+                    const formation = values.formation.trim();
+                    const rows = formation.split('-').map(Number);
+                    if (
+                        /^\d(?:-\d){1,4}$/.test(formation) &&
+                        rows.every((n) => n >= 1 && n <= 5) &&
+                        rows.reduce((a, b) => a + b, 0) === 10
+                    )
+                        state.formation = formation;
+                    else
+                        console.warn(
+                            'Formation must contain 2–5 rows totaling 10 outfield players. Keeping previous formation.',
+                        );
+                }
+                if (
+                    values.gap !== undefined &&
+                    values.gap !== null &&
+                    String(values.gap).trim() !== ''
+                ) {
+                    const gap = Number(values.gap);
+                    if (Number.isFinite(gap)) state.gap = Math.max(0, Math.min(160, gap));
+                }
+                state.players.forEach((player, index) => {
+                    for (const key of ['name', 'number']) {
+                        const value =
+                            values['player' + (index + 1) + (key === 'name' ? 'Name' : 'Number')];
+                        if (
+                            typeof value === 'string' ||
+                            (typeof value === 'number' && Number.isFinite(value))
+                        )
+                            player[key] = String(value).slice(0, key === 'name' ? 40 : 3);
+                    }
+                });
+                render();
+                // Replay the reveal when player content actually changes while already on
+                // screen (e.g. switching Home/Away teams) — gap/position-only tweaks are
+                // excluded since those already animate smoothly via the existing transform
+                // transition, and this is skipped entirely before the widget's first
+                // entrance so it never fights with Composer's own animation sequencing.
+                if (entered && contentSignature() !== before) playEntrance(1);
+            }
+            if (window.SingularWidget && typeof window.SingularWidget.init === 'function') {
+                SingularWidget.init({
+                    onInit: function () {},
+                    onValue: onSingularValue,
+                    onAnimation: onSingularAnimation,
+                });
+            } else {
+                render();
+                snapEntrance(true);
+                entered = true;
+                console.warn('Singular SDK unavailable. Showing local defaults.');
+            }
+        </script>
+    </body>
+</html>

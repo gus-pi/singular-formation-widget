@@ -1,0 +1,264 @@
+{
+  "model": {
+    "fields": [
+      {
+        "id": "formation",
+        "type": "text",
+        "title": "Formation (defence to attack)",
+        "defaultValue": "4-2-3-1"
+      },
+      {
+        "id": "gap",
+        "type": "number",
+        "title": "Horizontal gap \u2014 all rows",
+        "defaultValue": "42",
+        "min": "0",
+        "max": "160",
+        "step": "1",
+        "unit": "px"
+      },
+      {
+        "id": "player1Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "FREESE"
+      },
+      {
+        "id": "player1Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "24"
+      },
+      {
+        "id": "player2Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "ROBINSON"
+      },
+      {
+        "id": "player2Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "5"
+      },
+      {
+        "id": "player3Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "REAM"
+      },
+      {
+        "id": "player3Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "13"
+      },
+      {
+        "id": "player4Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "RICHARDS"
+      },
+      {
+        "id": "player4Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "3"
+      },
+      {
+        "id": "player5Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "FREEMAN"
+      },
+      {
+        "id": "player5Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "16"
+      },
+      {
+        "id": "player6Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "ADAMS"
+      },
+      {
+        "id": "player6Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "4"
+      },
+      {
+        "id": "player7Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "TILLMAN"
+      },
+      {
+        "id": "player7Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "7"
+      },
+      {
+        "id": "player8Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "PULISIC"
+      },
+      {
+        "id": "player8Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "10"
+      },
+      {
+        "id": "player9Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "MCKENNIE"
+      },
+      {
+        "id": "player9Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "8"
+      },
+      {
+        "id": "player10Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "DEST"
+      },
+      {
+        "id": "player10Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "2"
+      },
+      {
+        "id": "player11Name",
+        "type": "text",
+        "title": "Name",
+        "defaultValue": "BALOGUN"
+      },
+      {
+        "id": "player11Number",
+        "type": "text",
+        "title": "Shirt number",
+        "defaultValue": "20"
+      }
+    ],
+    "groups": [
+      {
+        "id": "layout",
+        "title": "Formation & spacing",
+        "width": "double",
+        "childIds": [
+          "formation",
+          "gap"
+        ]
+      },
+      {
+        "id": "player1",
+        "title": "Player 1 \u2014 goalkeeper",
+        "width": "single",
+        "childIds": [
+          "player1Name",
+          "player1Number"
+        ]
+      },
+      {
+        "id": "player2",
+        "title": "Player 2",
+        "width": "single",
+        "childIds": [
+          "player2Name",
+          "player2Number"
+        ]
+      },
+      {
+        "id": "player3",
+        "title": "Player 3",
+        "width": "single",
+        "childIds": [
+          "player3Name",
+          "player3Number"
+        ]
+      },
+      {
+        "id": "player4",
+        "title": "Player 4",
+        "width": "single",
+        "childIds": [
+          "player4Name",
+          "player4Number"
+        ]
+      },
+      {
+        "id": "player5",
+        "title": "Player 5",
+        "width": "single",
+        "childIds": [
+          "player5Name",
+          "player5Number"
+        ]
+      },
+      {
+        "id": "player6",
+        "title": "Player 6",
+        "width": "single",
+        "childIds": [
+          "player6Name",
+          "player6Number"
+        ]
+      },
+      {
+        "id": "player7",
+        "title": "Player 7",
+        "width": "single",
+        "childIds": [
+          "player7Name",
+          "player7Number"
+        ]
+      },
+      {
+        "id": "player8",
+        "title": "Player 8",
+        "width": "single",
+        "childIds": [
+          "player8Name",
+          "player8Number"
+        ]
+      },
+      {
+        "id": "player9",
+        "title": "Player 9",
+        "width": "single",
+        "childIds": [
+          "player9Name",
+          "player9Number"
+        ]
+      },
+      {
+        "id": "player10",
+        "title": "Player 10",
+        "width": "single",
+        "childIds": [
+          "player10Name",
+          "player10Number"
+        ]
+      },
+      {
+        "id": "player11",
+        "title": "Player 11",
+        "width": "single",
+        "childIds": [
+          "player11Name",
+          "player11Number"
+        ]
+      }
+    ]
+  }
+}

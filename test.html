@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>TVU Viewport Test</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                height: 100%;
+                background: transparent;
+                overflow: hidden;
+            }
+            body {
+                font:
+                    600 28px/1.35 Arial,
+                    sans-serif;
+                color: #fff;
+            }
+            /* Red border = exact edge of the page TVU renders */
+            #edge {
+                position: fixed;
+                inset: 0;
+                border: 6px solid #ff2d2d;
+                box-sizing: border-box;
+            }
+            /* Yellow = 90% action-safe, cyan = 80% title-safe */
+            .safe {
+                position: fixed;
+                box-sizing: border-box;
+                border: 3px dashed;
+            }
+            #action {
+                inset: 5%;
+                border-color: #ffd400;
+            }
+            #title {
+                inset: 10%;
+                border-color: #00e5ff;
+            }
+            .corner {
+                position: fixed;
+                background: #ff2d2d;
+                padding: 4px 10px;
+                font-size: 20px;
+            }
+            #info {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.75);
+                padding: 20px 28px;
+                border-radius: 8px;
+                text-align: left;
+            }
+            #info b {
+                color: #ffd400;
+            }
+            /* Mock lower third anchored like a typical Singular L3 on a 1920x1080 canvas */
+            #l3 {
+                position: fixed;
+                left: 7.3%;
+                bottom: 9.3%;
+                width: 45%;
+                height: 9.3%;
+                background: rgba(0, 90, 200, 0.85);
+                display: flex;
+                align-items: center;
+                padding-left: 24px;
+                box-sizing: border-box;
+                font-size: 32px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="edge"></div>
+        <div id="action" class="safe"></div>
+        <div id="title" class="safe"></div>
+        <div class="corner" style="top: 0; left: 0">TL</div>
+        <div class="corner" style="top: 0; right: 0">TR</div>
+        <div class="corner" style="bottom: 0; left: 0">BL</div>
+        <div class="corner" style="bottom: 0; right: 0">BR</div>
+        <div id="l3">MOCK LOWER THIRD</div>
+        <div id="info"></div>
+        <script>
+            function render() {
+                var w = window.innerWidth,
+                    h = window.innerHeight,
+                    dpr = window.devicePixelRatio || 1;
+                document.getElementById('info').innerHTML =
+                    'Viewport: <b>' +
+                    w +
+                    ' × ' +
+                    h +
+                    '</b> CSS px<br>' +
+                    'Device pixel ratio: <b>' +
+                    dpr +
+                    '</b> → <b>' +
+                    Math.round(w * dpr) +
+                    ' × ' +
+                    Math.round(h * dpr) +
+                    '</b> px<br>' +
+                    'Aspect: <b>' +
+                    (w / h).toFixed(3) +
+                    '</b> (16:9 = 1.778)<br>' +
+                    'Screen: <b>' +
+                    screen.width +
+                    ' × ' +
+                    screen.height +
+                    '</b><br>' +
+                    '<span style="font-size:16px;font-weight:400">' +
+                    navigator.userAgent +
+                    '</span><br>' +
+                    '<span style="font-size:16px;font-weight:400">Updated ' +
+                    new Date().toLocaleTimeString() +
+                    '</span>';
+            }
+            window.addEventListener('resize', render);
+            render();
+            setInterval(render, 1000);
+        </script>
+    </body>
+</html>
