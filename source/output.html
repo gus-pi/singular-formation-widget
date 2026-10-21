@@ -273,6 +273,8 @@
                     setClip(nameGrp, shown, 'inset(0 100% 0 0)');
                 });
             }
+            // fill 'both' holds the closed clip during the start delay, so a card never shows its
+            // previous (possibly open) state while waiting for its reveal.
             function playEntrance(scale) {
                 if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
                     snapEntrance(true);
@@ -287,7 +289,7 @@
                             duration: BADGE_MS * scale,
                             delay: START_DELAY + rowDelay * scale,
                             easing: 'ease-out',
-                            fill: 'forwards',
+                            fill: 'both',
                         },
                     );
                     nameGrp.animate(
@@ -296,7 +298,39 @@
                             duration: NAME_MS * scale,
                             delay: START_DELAY + (rowDelay + NAME_OFFSET) * scale,
                             easing: 'ease-out',
-                            fill: 'forwards',
+                            fill: 'both',
+                        },
+                    );
+                });
+            }
+            // Out: the reverse of the entrance -- names close first, then badges, front row first.
+            // No start delay, so the cards leave together with the rest of the graphic.
+            function playExit(scale) {
+                if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    snapEntrance(false);
+                    return;
+                }
+                const maxRowDelay = cardEls.reduce((m, c) => Math.max(m, c.rowDelay), 0);
+                cardEls.forEach(({ badge, nameGrp, rowDelay }) => {
+                    const delay = (maxRowDelay - rowDelay) * scale;
+                    badge.getAnimations().forEach((a) => a.cancel());
+                    nameGrp.getAnimations().forEach((a) => a.cancel());
+                    nameGrp.animate(
+                        [{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 100% 0 0)' }],
+                        {
+                            duration: NAME_MS * scale,
+                            delay,
+                            easing: 'ease-in',
+                            fill: 'both',
+                        },
+                    );
+                    badge.animate(
+                        [{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(100% 0 0 0)' }],
+                        {
+                            duration: BADGE_MS * scale,
+                            delay: delay + NAME_OFFSET * scale,
+                            easing: 'ease-in',
+                            fill: 'both',
                         },
                     );
                 });
@@ -329,11 +363,13 @@
                 }
                 if (anim.event === 'start') {
                     entered = entering;
+                    const maxRowDelay = cardEls.reduce((m, c) => Math.max(m, c.rowDelay), 0);
                     if (!entering) {
-                        snapEntrance(false);
+                        // The Widget bar's length on the Out timeline sets how long the exit takes.
+                        const exitTotal = maxRowDelay + NAME_OFFSET + BADGE_MS;
+                        playExit(anim.duration ? (anim.duration * 1000) / exitTotal : 1);
                         return;
                     }
-                    const maxRowDelay = cardEls.reduce((m, c) => Math.max(m, c.rowDelay), 0);
                     const designTotal = maxRowDelay + NAME_OFFSET + NAME_MS;
                     const scale = anim.duration ? (anim.duration * 1000) / designTotal : 1;
                     playEntrance(scale);
